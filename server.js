@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const app = express()
 const port = 3000
 
-const produtos = [
+let produtos = [
   {
     "id": 1,
     "nome": "batata kg",
@@ -59,6 +59,13 @@ app.patch('/produtos/:id_produto', (req, res) => {
   produtos[indiceProduto] = produtoNovo
 
   return res.json({ produtoNovo })
+})
+
+app.delete('/produtos/:id_produto', (req, res) => {
+  const idProduto = Number(req.params.id_produto)
+  produtos = produtos.filter(prod => prod.id !== idProduto)
+
+  return res.json({ produtos })
 })
 
 app.listen(port, () => {
