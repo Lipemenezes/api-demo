@@ -31,7 +31,7 @@ router.get('/:id_carro', (req, res) => {
   return res.json({ carro })
 })
 
-router.post('', (req, res) => {
+router.post('/', (req, res) => {
   const carro = req.body
   carro.id = carros.length + 1
 
