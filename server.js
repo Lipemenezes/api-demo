@@ -48,6 +48,19 @@ app.post('/produtos', (req, res) => {
   return res.json({ produto })
 })
 
+app.patch('/produtos/:id_produto', (req, res) => {
+  const indiceProduto = produtos.findIndex(prod => prod.id === Number(req.params.id_produto))
+
+  const produtoNovo = produtos[indiceProduto]
+
+  produtoNovo.quantidade = req.body.quantidade
+  produtoNovo.preco = req.body.preco
+
+  produtos[indiceProduto] = produtoNovo
+
+  return res.json({ produtoNovo })
+})
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
