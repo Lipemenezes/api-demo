@@ -5,7 +5,6 @@ const bodyParser = require('body-parser')
 const app = express()
 const errorHandler = require('./middlewares/errorHandler')
 const rotasProduto = require('./rotas/produtos')
-const rotasCarro = require('./rotas/carro')
 
 const port = 3000
 
@@ -21,7 +20,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 app.use('/produtos', rotasProduto)
-app.use('/carros', rotasCarro)
 app.use(errorHandler)
 
 app.listen(port, () => {
