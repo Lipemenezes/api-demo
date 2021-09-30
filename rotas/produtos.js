@@ -1,63 +1,43 @@
 const router = require('express').Router()
+const Produto = require('../modelos/produto')
 
-let produtos = [
-  {
-    "id": 1,
-    "nome": "batata kg",
-    "quantidade": 10,
-    "preco": 5
-  },
-  {
-    "id": 2,
-    "nome": "tomate kg",
-    "quantidade": 10,
-    "preco": 5
-  },
-  {
-    "id": 3,
-    "nome": "pessego kg",
-    "quantidade": 10,
-    "preco": 5
-  },
-]
+router.get('/', async (req, res) => {
+  const produtos = await Produto.find()
 
-router.get('/', (req, res) => {
   return res.json(produtos)
 })
 
-router.get('/:id_produto', (req, res) => {
-  const produto = produtos.find(prod => prod.id === Number(req.params.id_produto))
+router.get('/:id_produto', async (req, res) => {
+  const produto = await Produto.findOne({ _id: req.params.id_produto })
 
   return res.json({ produto })
 })
 
-router.post('/', (req, res) => {
-  const produto = req.body
-  produto.id = produtos.length + 1
-
-  produtos.push(produto)
+router.post('/', async (req, res) => {
+  const produto = new Produto(req.body)
+  await produto.save()
 
   return res.json({ produto })
 })
 
-router.patch('/:id_produto', (req, res) => {
-  const indiceProduto = produtos.findIndex(prod => prod.id === Number(req.params.id_produto))
+router.patch('/:id_produto', async (req, res) => {
+  const resposta = await Produto.updateOne({ _id: req.params.id_produto }, req.body)
 
-  const produtoNovo = produtos[indiceProduto]
+  if (resposta.modifiedCount != 1) {
+    return res.status(500).json({ message: 'Nao atualizou nada' })
+  }
 
-  produtoNovo.quantidade = req.body.quantidade
-  produtoNovo.preco = req.body.preco
-
-  produtos[indiceProduto] = produtoNovo
-
-  return res.json({ produtoNovo })
+  return res.json({ resposta })
 })
 
-router.delete('/:id_produto', (req, res) => {
-  const idProduto = Number(req.params.id_produto)
-  produtos = produtos.filter(prod => prod.id !== idProduto)
+router.delete('/:id_produto', async (req, res) => {
+  const resposta = await Produto.deleteOne({ _id: req.params.id_produto })
 
-  return res.json({ produtos })
+  if (resposta.deletedCount != 1) {
+    return res.status(500).json({ message: 'Nao deletou nada' })
+  }
+
+  return res.json({ resposta })
 })
 
 module.exports = router
