@@ -1,8 +1,9 @@
 const express = require('express')
 const mongoose = require('mongoose')
+require('express-async-errors')
 const bodyParser = require('body-parser')
 const app = express()
-
+const errorHandler = require('./middlewares/errorHandler')
 const rotasProduto = require('./rotas/produtos')
 const rotasCarro = require('./rotas/carro')
 
@@ -19,13 +20,13 @@ conectaBanco()
 app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
-
 app.use('/produtos', rotasProduto)
-
 app.use('/carros', rotasCarro)
+app.use(errorHandler)
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
+
 
 module.exports = app
