@@ -1,4 +1,5 @@
 const express = require('express')
+const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const app = express()
 
@@ -6,6 +7,13 @@ const rotasProduto = require('./rotas/produtos')
 const rotasCarro = require('./rotas/carro')
 
 const port = 3000
+
+const conectaBanco = () => {
+  mongoose.connect('mongodb://localhost:27017/exemplo')
+  console.log('Conectado no banco')
+}
+
+conectaBanco()
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
