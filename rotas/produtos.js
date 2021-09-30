@@ -1,43 +1,34 @@
 const router = require('express').Router()
-const Produto = require('../modelos/produto')
+const controllerProduto = require('../controllers/produto')
 
 router.get('/', async (req, res) => {
-  const produtos = await Produto.find()
+  const produtos = await controllerProduto.listaTodosProdutos()
 
   return res.json(produtos)
 })
 
 router.get('/:id_produto', async (req, res) => {
-  const produto = await Produto.findOne({ _id: req.params.id_produto })
+  const produto = await controllerProduto.listaUmProduto(req.params.id_produto)
 
   return res.json({ produto })
 })
 
 router.post('/', async (req, res) => {
-  const produto = new Produto(req.body)
-  await produto.save()
+  const produto = await controllerProduto.criaProduto(req.body)
 
   return res.json({ produto })
 })
 
 router.patch('/:id_produto', async (req, res) => {
-  const resposta = await Produto.updateOne({ _id: req.params.id_produto }, req.body)
+  await controllerProduto.atualizaProduto(req.params.id_produto, req.body)
 
-  if (resposta.modifiedCount != 1) {
-    return res.status(500).json({ message: 'Nao atualizou nada' })
-  }
-
-  return res.json({ resposta })
+  return res.json({ message: 'ok' })
 })
 
 router.delete('/:id_produto', async (req, res) => {
-  const resposta = await Produto.deleteOne({ _id: req.params.id_produto })
+  await controllerProduto.removeProduto(req.params.id_produto)
 
-  if (resposta.deletedCount != 1) {
-    return res.status(500).json({ message: 'Nao deletou nada' })
-  }
-
-  return res.json({ resposta })
+  return res.json({ message: 'ok' })
 })
 
 module.exports = router
